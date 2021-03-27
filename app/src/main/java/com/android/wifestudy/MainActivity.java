@@ -2,6 +2,8 @@ package com.android.wifestudy;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -17,6 +19,8 @@ import java.util.Date;
 
 import me.zhouzhuo.zzhorizontalprogressbar.ZzHorizontalProgressBar;
 
+import static android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+
 public class MainActivity extends AppCompatActivity {
     private NotificationManager manager;
     private Notification notification;
@@ -24,16 +28,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //去除状态遮罩
         setContentView(R.layout.activity_main);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //设置进度条
         final ZzHorizontalProgressBar pb = (ZzHorizontalProgressBar) findViewById(R.id.zzHorizontalProgressBar);
         try {
             pb.setProgress(100-Integer.parseInt(getDataStr().toString()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        //设置提醒时间
         textView = findViewById(R.id.gaokaotime);
         pb.setMax(100);
         try {
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        //创建高考倒计时通知
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationChannel notificationChannel = new NotificationChannel("gaokao","高考时间",
                 NotificationManager.IMPORTANCE_HIGH);
@@ -55,9 +61,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         manager.notify(1,notification);
-
+        //添加待办
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        ToDoFragment fragment =new ToDoFragment();
+        fragmentTransaction.add(R.id.ToDofragment,fragment).commit();
 
     }
+    //获取差值
     public static String getDataStr() throws ParseException {
         long diff;
         long nd = 1000 * 24 * 60 * 60;
@@ -72,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         return day;
 
     }
+    //转换数值
     public static long stringToLong(String strTime, String formatType)
             throws ParseException {
         Date date = stringToDate(strTime, formatType); // String类型转成date类型

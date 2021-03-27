@@ -11,18 +11,21 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+
 public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             setContentView(R.layout.activity_splash);
+            //设置标题
             TextView textview1 = findViewById(R.id.textView1);
+            //设置按钮
             final Button button = findViewById(R.id.button);
             Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/dongman.ttf");
             textview1.setTypeface(typeface);
             button.setTypeface(typeface);
+            //设置动画
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -54,6 +57,7 @@ public class Splash extends AppCompatActivity {
                 }
             });
         }
+        //设置点击事件
         public void ClickToTurn (View view ){
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

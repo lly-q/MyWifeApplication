@@ -4,19 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_overlay"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp">
 
+        <TextView
+            android:id="@+id/laopozai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:singleLine="true"
+            android:text="欢迎回来~老婆仔"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:paddingTop="40dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="10dp"></TextView>
         <TextClock
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="40dp"
+            app:layout_constraintTop_toBottomOf="@id/laopozai"
             android:textColor="@color/black"
             android:textSize="60dp"
             tools:ignore="MissingConstraints"></TextClock>
@@ -38,6 +50,28 @@
             app:layout_constraintStart_toEndOf="@+id/zzHorizontalProgressBar"
             app:layout_constraintTop_toBottomOf="@+id/time"
             tools:ignore="MissingConstraints"></TextView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="14sp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="待办"
+            android:textColor="@color/black"
+            android:textSize="59sp">
+        </TextView>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ToDofragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

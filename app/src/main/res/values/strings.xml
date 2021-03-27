@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyWifeApplication</string>
+    <string name="title">老婆仔学习制定计划</string>
+    <string name="enter">进入</string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

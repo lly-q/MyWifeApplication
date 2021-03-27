@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp">
+
+        <TextClock
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="40dp"
+            android:textColor="@color/black"
+            android:textSize="60dp"
+            tools:ignore="MissingConstraints"></TextClock>
+
+        <me.zhouzhuo.zzhorizontalprogressbar.ZzHorizontalProgressBar
+            android:id="@+id/zzHorizontalProgressBar"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            app:layout_constraintStart_toStartOf="@+id/time"
+            app:layout_constraintTop_toBottomOf="@+id/time"
+            tools:ignore="MissingConstraints"></me.zhouzhuo.zzhorizontalprogressbar.ZzHorizontalProgressBar>
+
+        <TextView
+            android:id="@+id/gaokaotime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/zzHorizontalProgressBar"
+            app:layout_constraintStart_toEndOf="@+id/zzHorizontalProgressBar"
+            app:layout_constraintTop_toBottomOf="@+id/time"
+            tools:ignore="MissingConstraints"></TextView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

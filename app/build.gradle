@@ -31,5 +31,6 @@ dependencies {
     implementation 'com.zackratos.ultimatebarx:ultimatebarx:0.5.1'
     implementation 'com.github.zhouzhuo810:ZzHorizontalProgressBar:1.1.1'
     implementation 'com.eightbitlab:blurview:1.6.6'
+    implementation "androidx.cardview:cardview:1.0.0"
 
 }

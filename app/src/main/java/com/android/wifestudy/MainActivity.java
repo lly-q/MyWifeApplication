@@ -8,14 +8,23 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Editor;
 import android.widget.TextView;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import me.zhouzhuo.zzhorizontalprogressbar.ZzHorizontalProgressBar;
 
@@ -67,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         ToDoFragment fragment =new ToDoFragment();
         fragmentTransaction.add(R.id.ToDofragment,fragment).commit();
 
+        //添加数据
+        saveMessage(this,"整理数学错题",2);
+        //map传递至fragment
+
     }
     //获取差值
     public static String getDataStr() throws ParseException {
@@ -105,4 +118,12 @@ public class MainActivity extends AppCompatActivity {
         return date.getTime();
     }
 
+    public static void saveMessage(Context context, String title, int interval){
+        SharedPreferences sp = context.getSharedPreferences("sp",context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("title",title);
+        editor.putInt("interval",interval);
+        editor.commit();
+    }
 }
+

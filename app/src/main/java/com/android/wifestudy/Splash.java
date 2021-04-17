@@ -16,8 +16,9 @@ import static android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
 public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             setContentView(R.layout.activity_splash);
+            //去除状态遮罩
+            lightStatusBar();
             //设置标题
             TextView textview1 = findViewById(R.id.textView1);
             //设置按钮
@@ -62,6 +63,10 @@ public class Splash extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+    private void lightStatusBar() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
+    }
+
 
 

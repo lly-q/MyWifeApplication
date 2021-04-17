@@ -37,25 +37,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //去除状态遮罩
         setContentView(R.layout.activity_main);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        //设置进度条
+        //去除状态遮罩
+        lightStatusBar();
+        //设置进度条&设置提醒时间
+        setGaoKaoProgressDayLeft();
+        //创建高考倒计时通知
+        notificationGaoKao();
+        //添加待办
+        addToDoFragment();
+
+    }
+    private void setGaoKaoProgressDayLeft() {
         final ZzHorizontalProgressBar pb = (ZzHorizontalProgressBar) findViewById(R.id.zzHorizontalProgressBar);
+        pb.setMax(100);
         try {
             pb.setProgress(100-Integer.parseInt(getDataStr().toString()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        //设置提醒时间
         textView = findViewById(R.id.gaokaotime);
-        pb.setMax(100);
         try {
             textView.setText("距离高考还有"+Integer.parseInt(getDataStr().toString())+"天");
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        //创建高考倒计时通知
+    }
+
+    private void addToDoFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        ToDoFragment fragment =new ToDoFragment();
+        fragmentTransaction.add(R.id.ToDofragment,fragment).commit();
+
+        //添加数据
+        saveMessage(this,"整理数学错题",2);
+    }
+
+    private void notificationGaoKao() {
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationChannel notificationChannel = new NotificationChannel("gaokao","高考时间",
                 NotificationManager.IMPORTANCE_HIGH);
@@ -70,17 +89,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         manager.notify(1,notification);
-        //添加待办
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ToDoFragment fragment =new ToDoFragment();
-        fragmentTransaction.add(R.id.ToDofragment,fragment).commit();
-
-        //添加数据
-        saveMessage(this,"整理数学错题",2);
-        //map传递至fragment
-
     }
+
+    private void lightStatusBar() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+    }
+
     //获取差值
     public static String getDataStr() throws ParseException {
         long diff;

@@ -1,21 +1,30 @@
 package com.android.wifestudy;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.annotation.NonNull;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Editor;
 import android.widget.TextView;
+
+import com.android.internal.widget.LinearLayoutManager;
+import com.android.internal.widget.RecyclerView;
+import com.android.wifestudy.Adapter.MyAdapter;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -24,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.zhouzhuo.zzhorizontalprogressbar.ZzHorizontalProgressBar;
@@ -31,12 +41,20 @@ import me.zhouzhuo.zzhorizontalprogressbar.ZzHorizontalProgressBar;
 import static android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
 
 public class MainActivity extends AppCompatActivity {
+    String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int PERMISSION_REQUEST = 1;
+    List<String> mPermissionList = new ArrayList<>();
     private NotificationManager manager;
     private Notification notification;
     private TextView textView;
+    private RecyclerView recyclerView;
+    private MyAdapter myAdapter;
+    private ArrayList lists = new ArrayList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //获取储存权限
+        checkPermission();
         setContentView(R.layout.activity_main);
         //去除状态遮罩
         lightStatusBar();
@@ -46,8 +64,11 @@ public class MainActivity extends AppCompatActivity {
         notificationGaoKao();
         //添加待办
         addToDoFragment();
+        //
 
     }
+
+
     private void setGaoKaoProgressDayLeft() {
         final ZzHorizontalProgressBar pb = (ZzHorizontalProgressBar) findViewById(R.id.zzHorizontalProgressBar);
         pb.setMax(100);
@@ -71,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.ToDofragment,fragment).commit();
 
         //添加数据
-        saveMessage(this,"整理数学错题",2);
+        //saveMessage(this,"整理数学错题",2);
     }
 
     private void notificationGaoKao() {
@@ -131,13 +152,47 @@ public class MainActivity extends AppCompatActivity {
     public static long dateToLong(Date date) {
         return date.getTime();
     }
-
-    public static void saveMessage(Context context, String title, int interval){
+    //写入数据（使用SharedPreferences）
+    /**public static void saveMessage(Context context, String title, int interval){
         SharedPreferences sp = context.getSharedPreferences("sp",context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("title",title);
         editor.putInt("interval",interval);
         editor.commit();
+    }**/
+
+    private void checkPermission() {
+        mPermissionList.clear();
+        //判断哪些权限未授予
+        for (int i = 0; i < permissions.length; i++) {
+            if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                mPermissionList.add(permissions[i]);
+            }
+        }
+        /**
+         * 判断是否为空
+         */
+        if (mPermissionList.isEmpty()) {//未授予的权限为空，表示都授予了
+        } else {//请求权限方法
+            String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
+            ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSION_REQUEST);
+        }
+    }
+    /**
+     * 响应授权
+     * 这里不管用户是否拒绝，都进入首页，不再重复申请权限
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_REQUEST:
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
     }
 }
+
 

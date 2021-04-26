@@ -36,8 +36,6 @@ public class ToDoFragment extends Fragment {
     private TextView lasttime;
     private TextView nexttime;
     private TextView dayleft;
-    private int Interval = 0;
-    private String intervaltext;
     ArrayList<String> mtitle;
     private String[] titleGroup;
     private Integer[] intervalGroup;
@@ -52,8 +50,9 @@ public class ToDoFragment extends Fragment {
     private Context mContext;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //设置
+        //设置fragment布局文件
         view = inflater.inflate(R.layout.fragment_test, container, false);
+        //初始化list
         initList();
         return view;
     }
@@ -63,14 +62,15 @@ public class ToDoFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //初始化布局控件，原始数据，RecyclerView
         initView();
         HandletMessage();
-        initrecycleview();
+        initRecycleview();
     }
 
     private void HandletMessage() {
         //获取上下文
-        Context context = getActivity();
+        Context context = requireContext();
         DatabaseHelper dbhelper = new DatabaseHelper(context, "ToDo_db", null, 1);
         SQLiteDatabase db = dbhelper.getWritableDatabase();
 
@@ -90,7 +90,9 @@ public class ToDoFragment extends Fragment {
         this.itemNum = cursor.getCount();
         this.titleGroup = new String[this.itemNum];
         this.intervalGroup = new Integer[this.itemNum];
+        //历遍数据库获取title_data和interval
         while (cursor.moveToNext()) {
+            //T,I为临时变量，用来每次循环存单个数据
             String T = cursor.getString(cursor.getColumnIndex("title_data"));
             int I = Integer.parseInt(cursor.getString(cursor.getColumnIndex("interval")));
             //Interval = Integer.parseInt(I);
@@ -99,12 +101,9 @@ public class ToDoFragment extends Fragment {
             sum++;
         }
         //方法末端得到两个String字符串集合
-
-        //获取经过计算的剩余时间
-
     }
 
-    private void initrecycleview() {
+    private void initRecycleview() {
         this.mContext = requireContext();
         this.recyclerView= view.findViewById(R.id.recycleview);
         this.dayLeftGroup =new String[this.itemNum];
@@ -113,29 +112,36 @@ public class ToDoFragment extends Fragment {
 
         for (int i = 0; i < this.itemNum; i++) {
 
-            titlelists.add(this.titleGroup[i]);
+            this.titlelists.add(this.titleGroup[i]);
             try {
+                //获取经过计算的剩余时间，依次存入intervallists
                 this.dayLeftGroup[i] = getDataStr(getNextTime(intervalGroup[i]).toString());
-                intervallists.add(this.dayLeftGroup[i]);
+                this.intervallists.add(this.dayLeftGroup[i]);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
 
         }
+        //实例化适配器，并传入titlelists，intervallists.
         this.myAdapter = new MyAdapter(this.titlelists,this.intervallists);
+        //设置适配器，传入已经实例化的适配器。
         this.recyclerView.setAdapter(this.myAdapter);
+
+        //将间隔参数传入名为spaceValue的HashMap
         this.spaceValue.put(SpacesItemDecoration.TOP_SPACE, 10);
         this.spaceValue.put(SpacesItemDecoration.BOTTOM_SPACE, 20);
         this.spaceValue.put(SpacesItemDecoration.LEFT_SPACE, 0);
         this.spaceValue.put(SpacesItemDecoration.RIGHT_SPACE, 0);
+
+        //将SpacesItemDecoration传入addItemDecoration方法。
         this.recyclerView.addItemDecoration(new SpacesItemDecoration(this.spaceValue));
     }
 
     //检查是否为空
     private boolean CheckStr() {
         //获取上下文
-        Context context = getActivity();
+        Context context = requireContext();
         DatabaseHelper dbhelper = new DatabaseHelper(context, "ToDo_db", null, 1);
         SQLiteDatabase db = dbhelper.getWritableDatabase();
         Cursor cursor = db.query("content", new String[]{"title_data"}, null, null, null, null, null);
@@ -155,7 +161,7 @@ public class ToDoFragment extends Fragment {
 
     private void initView() {
         //获取上下文
-        Context context = getActivity();
+        Context context = requireContext();
         this.dayleft = view.findViewById(R.id.dayleft);
         //未解决
         title = view.findViewById(R.id.title);

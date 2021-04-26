@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.wifestudy.Adapter.MyAdapter;
 import com.android.wifestudy.Data.DatabaseHelper;
+import com.android.wifestudy.RecyclerViewDecoration.SpacesItemDecoration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -46,6 +48,7 @@ public class ToDoFragment extends Fragment {
     private MyAdapter myAdapter;
     private ArrayList titlelists = new ArrayList();
     private ArrayList intervallists = new ArrayList();
+    private HashMap spaceValue;
     private Context mContext;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -105,6 +108,7 @@ public class ToDoFragment extends Fragment {
         this.mContext = requireContext();
         this.recyclerView= view.findViewById(R.id.recycleview);
         this.dayLeftGroup =new String[this.itemNum];
+        this.spaceValue = new HashMap<>();
         this.recyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));//线性显示
 
         for (int i = 0; i < this.itemNum; i++) {
@@ -121,6 +125,11 @@ public class ToDoFragment extends Fragment {
         }
         this.myAdapter = new MyAdapter(this.titlelists,this.intervallists);
         this.recyclerView.setAdapter(this.myAdapter);
+        this.spaceValue.put(SpacesItemDecoration.TOP_SPACE, 10);
+        this.spaceValue.put(SpacesItemDecoration.BOTTOM_SPACE, 20);
+        this.spaceValue.put(SpacesItemDecoration.LEFT_SPACE, 0);
+        this.spaceValue.put(SpacesItemDecoration.RIGHT_SPACE, 0);
+        this.recyclerView.addItemDecoration(new SpacesItemDecoration(this.spaceValue));
     }
 
     //检查是否为空
